@@ -25,8 +25,10 @@ export default function Facility(props) {
     }
 
     function toggleEditing() {
-        setIsEditing(prevState => !prevState)
-        setFacilityUpdateData(prevState => ({...prevState, facilityName: props.facilityData.facilityName, facilityAmount: props.facilityData.facilityAmount}))
+        if(props.userManager.role === 'ADMIN') {
+            setIsEditing(prevState => !prevState)
+            setFacilityUpdateData(prevState => ({...prevState, facilityName: props.facilityData.facilityName, facilityAmount: props.facilityData.facilityAmount}))
+        }
     }
 
     async function deleteButtonClicked() {
@@ -119,12 +121,15 @@ export default function Facility(props) {
                     </form>
                 :
                     <div onClick={toggleEditing} className="grid grid-cols-8 gap-2 text-xl font-normal">
-                        <div className="col-span-7 grid grid-cols-3 bg-sky-500 p-2 mb-3 rounded-lg hover:bg-zinc-50 hover:text-sky-500 hover:cursor-pointer transition-all ease-in duration-75">
+                        <div 
+                        className={props.userManager.role === 'ADMIN' ? 
+                        "col-span-7 grid grid-cols-3 bg-sky-500 p-2 mb-3 rounded-lg hover:bg-zinc-50 hover:text-sky-500 hover:cursor-pointer transition-all ease-in duration-75" : 
+                        "col-span-8 grid grid-cols-3 bg-sky-500 p-2 mb-3 rounded-lg"}>
                             <h1>{props.facilityData.facilityName}</h1>
                             <h1> : </h1>
                             <h1>{props.facilityData.facilityAmount}</h1>
                         </div>
-                        <button onClick={deleteButtonClicked} className="bg-sky-500 p-2 mb-3 rounded-lg font-bold hover:bg-zinc-50 hover:text-sky-500 transition-all ease-in duration-75">X</button>
+                        {props.userManager.role === 'ADMIN' && <button onClick={deleteButtonClicked} className="bg-sky-500 p-2 mb-3 rounded-lg font-bold hover:bg-zinc-50 hover:text-sky-500 transition-all ease-in duration-75">X</button>}
                     </div>
             }
         </>

@@ -1,8 +1,10 @@
-import NewFacilityForm from "./NewFacilityForm"
-import NewScheduleForm from "./NewScheduleForm"
-import UpdateRoomForm from "./UpdateRoomForm"
+import NewFacilityForm from "./Admin/NewFacilityForm"
+import NewScheduleForm from "./Admin/NewScheduleForm"
+import UpdateRoomForm from "./Admin/UpdateRoomForm"
 import ScheduleContainer from "./ScheduleContainer"
 import FacilityContainer from "./FacilityContainer"
+import NewRequestForm from "./User/NewRequestForm"
+import MyScheduleInRoomDetailsContainer from "./User/MyScheduleInRoomDetailsContainer"
 
 import { useState } from 'react'
 
@@ -52,18 +54,26 @@ export default function RoomDetails(props) {
                     <ScheduleContainer roomDetails={props.roomDetails} schedules={schedules} modifyScheduleFunc={setSchedules} userManager={props.userManager}/>
                     <FacilityContainer roomDetails={props.roomDetails} facilities={facilities} modifyFacilityFunc={setFacilities} userManager={props.userManager}/>
                     <div className="col-span-2 text-center bg-sky-700 p-5 rounded-lg flex items-center justify-center">
-                        <NewScheduleForm userManager={props.userManager} roomData={props.roomDetails} modifyScheduleFunc={setSchedules}/>
+                        {props.userManager.role === 'ADMIN' ? <NewScheduleForm userManager={props.userManager} roomData={props.roomDetails} modifyScheduleFunc={setSchedules}/> : 
+                        <NewRequestForm userManager={props.userManager} roomData={props.roomDetails}/>}
                     </div>
-                    <div className="bg-sky-700 p-5 rounded-lg flex items-center justify-center">
-                        <NewFacilityForm userManager={props.userManager} roomData={props.roomDetails} modifyFacilityFunc={setFacilities}/>
-                    </div>
-                    <div className="bg-sky-700 p-5 rounded-lg flex items-center justify-center">
+                    {
+                        props.userManager.role === 'ADMIN' ? 
+                            <div className="bg-sky-700 p-5 rounded-lg flex items-center justify-center">
+                                <NewFacilityForm userManager={props.userManager} roomData={props.roomDetails} modifyFacilityFunc={setFacilities}/>
+                            </div>
+                        :
+                            <div className="col-span-2 bg-sky-700 p-5 rounded-lg">
+                                <MyScheduleInRoomDetailsContainer userManager={props.userManager} roomDetails={props.roomDetails} schedules={schedules} modifyScheduleFunc={setSchedules}/>
+                            </div>
+                    }
+                    {props.userManager.role === 'ADMIN' && <div className="bg-sky-700 p-5 rounded-lg flex items-center justify-center">
                         <UpdateRoomForm userManager={props.userManager} roomData={props.roomDetails} modifyRoomFunc={props.modifyRoomFunc} modifyRoomDataFunc={setRoomData}/>
-                    </div>
+                    </div>}
                 </div>
             </div>
             <div className="mt-5 flex justify-between">
-                <button onClick={deleteButtonClicked} className="text-xl text-zinc-50 bg-sky-500 p-2 rounded-lg font-bold hover:bg-zinc-50 hover:text-sky-500 transition-all ease-in duration-75">Delete Room</button>
+                {props.userManager.role === 'ADMIN' && <button onClick={deleteButtonClicked} className="text-xl text-zinc-50 bg-sky-500 p-2 rounded-lg font-bold hover:bg-zinc-50 hover:text-sky-500 transition-all ease-in duration-75">Delete Room</button>}
                 <button onClick={props.toggleScreenFunc} className="text-xl text-zinc-50 bg-sky-500 p-2 rounded-lg font-bold hover:bg-zinc-50 hover:text-sky-500 transition-all ease-in duration-75">Back</button>
             </div>
         </div>

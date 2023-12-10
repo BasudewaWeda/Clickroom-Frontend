@@ -1,11 +1,10 @@
 import { useEffect, useState } from "react"
 import Room from './Room'
 import RoomDetails from './RoomDetails'
-import NewRoomForm from "./NewRoomForm"
+import NewRoomForm from "./Admin/NewRoomForm"
 
 export default function Home(props) {
     const [roomData, setRoomData] = useState([])
-    const [loading, setLoading] = useState(true)
     const [screenIndex, setScreenIndex] = useState(0)
     const [roomDetails, setRoomDetails] = useState({})
 
@@ -24,8 +23,6 @@ export default function Home(props) {
             })
             .then(data => {
                 setRoomData(data)
-                setLoading(false)
-                console.log(data)
             })
         }
         catch (error) {
@@ -39,18 +36,16 @@ export default function Home(props) {
 
     return (
         <>
-            {!loading ? 
+            {
                 screenIndex === 0 ? 
                     <div className="p-5 grid grid-cols-4 gap-5">
                         {roomData.map(room => <Room roomData={room} key={room.id} toggleScreenFunc={toggleScreen} setRoomDetails={setRoomDetails}/>)}
-                        <NewRoomForm userManager={props.userManager} modifyRoomFunc={setRoomData}/>
+                        {props.userManager.role === 'ADMIN' &&  <NewRoomForm userManager={props.userManager} modifyRoomFunc={setRoomData}/>}
                     </div> 
                     :
                     <div className="p-5">
                         <RoomDetails roomDetails = {roomDetails} toggleScreenFunc={toggleScreen} userManager={props.userManager} modifyRoomFunc={setRoomData}/>
                     </div>
-                : 
-                <h1>Loading</h1>
             }
         </>
     )

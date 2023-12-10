@@ -1,6 +1,6 @@
 import { useState } from "react"
 import Login from "./Components/Login"
-import MainContainer from "./Components/Admin/MainContainer"
+import MainContainer from "./Components/MainContainer"
 
 export default function App() {
     const [userManager, setUserManager] = useState({

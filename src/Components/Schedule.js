@@ -1,7 +1,6 @@
 import { useState } from "react"
 
 export default function Schedule(props) {
-
     const [isEditing, setIsEditing] = useState(false)
     const [scheduleUpdateData, setScheduleUpdateData] = useState({
         borrowDate: props.scheduleData.borrowDate,
@@ -27,8 +26,10 @@ export default function Schedule(props) {
     }
 
     function toggleEditing() {
-        setIsEditing(prevState => !prevState)
-        setScheduleUpdateData(prevState => ({...prevState, borrowDate: props.scheduleData.borrowDate, startTime: props.scheduleData.startTime, endTime: props.scheduleData.endTime, borrowDetail: props.scheduleData.borrowDetail}))
+        if(props.userManager.role === 'ADMIN') {
+            setIsEditing(prevState => !prevState)
+            setScheduleUpdateData(prevState => ({...prevState, borrowDate: props.scheduleData.borrowDate, startTime: props.scheduleData.startTime, endTime: props.scheduleData.endTime, borrowDetail: props.scheduleData.borrowDetail}))
+        }
     }
 
     async function deleteButtonClicked() {
@@ -172,7 +173,10 @@ export default function Schedule(props) {
                     </form>
                 :
                     <div className="grid grid-cols-12 gap-2">
-                        <div onClick={toggleEditing} className="col-span-11 bg-sky-500 p-2 rounded-lg mb-3 flex items-center justify-between hover:bg-zinc-50 hover:text-sky-500 hover:cursor-pointer transition-all ease-in duration-75">
+                        <div onClick={toggleEditing} 
+                        className={props.userManager.role === 'ADMIN' ? 
+                        "col-span-11 bg-sky-500 p-2 rounded-lg mb-3 flex items-center justify-between hover:bg-zinc-50 hover:text-sky-500 hover:cursor-pointer transition-all ease-in duration-75" :
+                        "col-span-12 bg-sky-500 p-2 rounded-lg mb-3 flex items-center justify-between"}>
                             <div>
                                 <h1 className="text-2xl text-left">{props.scheduleData.borrowDetail}</h1>
                                 <h1 className="text-xl font-normal text-left">{props.scheduleData.borrowDate} | {props.scheduleData.startTime} - {props.scheduleData.endTime}</h1>
@@ -190,7 +194,7 @@ export default function Schedule(props) {
                                 </div>
                             </div>
                         </div>
-                        <button onClick={deleteButtonClicked} className="text-xl bg-sky-500 p-2 mb-3 rounded-lg font-bold hover:bg-zinc-50 hover:text-sky-500 transition-all ease-in duration-75">X</button>
+                        {props.userManager.role === 'ADMIN' && <button onClick={deleteButtonClicked} className="text-xl bg-sky-500 p-2 mb-3 rounded-lg font-bold hover:bg-zinc-50 hover:text-sky-500 transition-all ease-in duration-75">X</button>}
                     </div>
             }
         </>
