@@ -1,8 +1,10 @@
 import { useState } from "react"
 import Login from "./Components/Login"
 import MainContainer from "./Components/MainContainer"
+import HomeContainer from "./Components/Home/HomeContainer"
 
 export default function App() {
+    const [screenIndex, setScreenIndex] = useState(0)
     const [userManager, setUserManager] = useState({
         token: "",
         username: "",
@@ -21,8 +23,13 @@ export default function App() {
     
     return (
         <>
-            {!userManager.loggedIn && <Login loginFunc={logIn}/>}
-            {userManager.loggedIn && <MainContainer userManager={userManager} modifyUserManager={setUserManager}/>}
+            {
+                screenIndex === 0 ? 
+                    <HomeContainer modifyScreenIndexFunc={setScreenIndex}/> 
+                : 
+                    (!userManager.loggedIn && <Login loginFunc={logIn}/>) || 
+                    (userManager.loggedIn && <MainContainer userManager={userManager} modifyUserManager={setUserManager}/>)
+            }
         </>
     )
 }

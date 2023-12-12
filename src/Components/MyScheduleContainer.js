@@ -38,7 +38,7 @@ export default function MyScheduleContainer(props) {
                         <h1>You have no schedule</h1> 
                     </div>
                 : 
-                    scheduleData.map(schedule => <MySchedule scheduleData={schedule} modifyScheduleFunc={setScheduleData} userManager={props.userManager}/>)
+                    scheduleData.map(schedule => <MySchedule scheduleData={schedule} key={schedule.id} modifyScheduleFunc={setScheduleData} userManager={props.userManager}/>)
             }  
         </div>
     )

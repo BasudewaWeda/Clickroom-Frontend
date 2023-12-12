@@ -38,7 +38,7 @@ export default function Home(props) {
         <>
             {
                 screenIndex === 0 ? 
-                    <div className="p-5 grid grid-cols-4 gap-5">
+                    <div className="p-5 grid grid-cols-5 gap-3">
                         {roomData.map(room => <Room roomData={room} key={room.id} toggleScreenFunc={toggleScreen} setRoomDetails={setRoomDetails}/>)}
                         {props.userManager.role === 'ADMIN' &&  <NewRoomForm userManager={props.userManager} modifyRoomFunc={setRoomData}/>}
                     </div> 
