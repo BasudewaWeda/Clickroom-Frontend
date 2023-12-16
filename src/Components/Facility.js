@@ -32,23 +32,25 @@ export default function Facility(props) {
     }
 
     async function deleteButtonClicked() {
-        try {
-            let response = await fetch(`http://localhost:8080/api/v1/facility/admin/${props.facilityData.id}`, {
-                method: 'DELETE',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': 'Bearer '.concat(props.userManager.token)
-                },
-            })
-            if(!response.ok) {
-                alert("Something went wrong")
-                return
+        if(window.confirm("Are you sure you want to delete this facility?")) {
+            try {
+                let response = await fetch(`http://localhost:8080/api/v1/facility/admin/${props.facilityData.id}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer '.concat(props.userManager.token)
+                    },
+                })
+                if(!response.ok) {
+                    alert("Something went wrong")
+                    return
+                }
+                alert("Facility successfully deleted!")
+                props.modifyFacilityFunc(prevState => prevState.filter(prevState => prevState.id !== props.facilityData.id))
             }
-            alert("Facility successfully deleted!")
-            props.modifyFacilityFunc(prevState => prevState.filter(prevState => prevState.id !== props.facilityData.id))
-        }
-        catch (error) {
-            alert(error)
+            catch (error) {
+                alert(error)
+            }
         }
     }
 
@@ -142,8 +144,8 @@ export default function Facility(props) {
                         </button>
                     </form>
                 :
-                    <div onClick={toggleEditing} className="grid grid-cols-8 gap-2 text-xl font-normal">
-                        <div 
+                    <div className="grid grid-cols-8 gap-2 text-xl font-normal">
+                        <div onClick={toggleEditing}
                         className={props.userManager.role === 'ADMIN' ? 
                         "col-span-7 grid grid-cols-3 bg-sky-500 p-2 mb-3 rounded-lg hover:bg-zinc-50 hover:text-sky-500 hover:cursor-pointer transition-all ease-in duration-75" : 
                         "col-span-8 grid grid-cols-3 bg-sky-500 p-2 mb-3 rounded-lg"}>

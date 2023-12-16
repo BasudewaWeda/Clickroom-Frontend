@@ -35,11 +35,11 @@ export default function AdminContainer(props) {
                     <img src={usericon} className="w-12 h-12 bg-sky-700 rounded-full" alt="User Icon"></img>
                 </div>
             </div>
-            <div className="flex pt-16">
-                <div className="bg-sky-500 flex flex-col h-[93vh] justify-between">
+            <div className="flex">
+                <div className="bg-sky-500 flex flex-col h-screen justify-between">
                     {
                         props.userManager.role === 'ADMIN' ? 
-                            <div className="grid grid-cols-1">
+                            <div className="grid grid-cols-1 pt-16">
                                 <button className={stateManager === 0 ? selectedButtonStyle : nonSelectedButtonStyle} onClick={() => setStateManager(0)}>
                                     <svg className="mr-1 group-hover:fill-sky-500 group-hover:mr-2 transition-all ease-in duration-75" width="32px" height="32px" viewBox="0 0 512.00 512.00" xmlns="http://www.w3.org/2000/svg" stroke-width="0.00512">
                                         <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
@@ -95,7 +95,7 @@ export default function AdminContainer(props) {
                                 </button>
                             </div>
                         :
-                            <div className="grid grid-cols-1">
+                            <div className="grid grid-cols-1 pt-16">
                                 <button className={stateManager === 0 ? selectedButtonStyle : nonSelectedButtonStyle} onClick={() => setStateManager(0)}>
                                     <svg className="mr-1 group-hover:fill-sky-500 transition-all ease-in duration-75" width="32px" height="32px" viewBox="0 0 512.00 512.00" xmlns="http://www.w3.org/2000/svg" stroke-width="0.00512">
                                         <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
@@ -152,13 +152,15 @@ export default function AdminContainer(props) {
                         Log Out
                     </button>
                 </div>
-                <div className="flex-1 h-[93vh] bg-sky-700 overflow-y-auto">
-                    {
-                        (stateManager === 0 && <RoomContainer userManager={props.userManager}/>) || 
-                        (stateManager === 1 && <RequestContainer userManager={props.userManager}/>) ||
-                        (stateManager === 2 && <MyScheduleContainer userManager={props.userManager}/>) ||
-                        (stateManager === 3 && props.userManager.role === 'ADMIN' && <NewUserMenu userManager={props.userManager}/>)
-                    }
+                <div className="flex-1 h-screen bg-sky-700 overflow-y-auto">
+                    <div className="pt-16">
+                        {
+                            (stateManager === 0 && <RoomContainer userManager={props.userManager}/>) || 
+                            (stateManager === 1 && <RequestContainer userManager={props.userManager}/>) ||
+                            (stateManager === 2 && <MyScheduleContainer userManager={props.userManager}/>) ||
+                            (stateManager === 3 && props.userManager.role === 'ADMIN' && <NewUserMenu userManager={props.userManager}/>)
+                        }
+                    </div>
                 </div>
             </div>
         </div>

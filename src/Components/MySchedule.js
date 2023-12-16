@@ -1,22 +1,24 @@
 export default function MySchedule(props) {
     async function deleteSchedule() {
-        try {
-            let response = await fetch(`http://localhost:8080/api/v1/schedule/${props.scheduleData.id}`, {
-                method: 'DELETE',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': 'Bearer '.concat(props.userManager.token)
-                },
-            })
-            if(!response.ok) {
-                alert("Something went wrong")
-                return
+        if(window.confirm("Are you sure you want to delete this schedule?")) {
+            try {
+                let response = await fetch(`http://localhost:8080/api/v1/schedule/${props.scheduleData.id}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer '.concat(props.userManager.token)
+                    },
+                })
+                if(!response.ok) {
+                    alert("Something went wrong")
+                    return
+                }
+                alert("Schedule successfully deleted!")
+                props.modifyScheduleFunc(prevState => prevState.filter(state => state.id !== props.scheduleData.id))
             }
-            alert("Schedule successfully deleted!")
-            props.modifyScheduleFunc(prevState => prevState.filter(state => state.id !== props.scheduleData.id))
-        }
-        catch (error) {
-            alert(error)
+            catch (error) {
+                alert(error)
+            }
         }
     }
 

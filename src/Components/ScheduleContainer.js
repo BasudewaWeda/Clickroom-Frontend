@@ -1,7 +1,7 @@
 import Schedule from "./Schedule"
 
 export default function ScheduleContainer(props) {
-    let scheduleItems = props.schedules.map(schedule => <Schedule roomDetails={props.roomDetails} scheduleData={schedule} key={schedule.id} userManager={props.userManager} modifyScheduleFunc={props.modifyScheduleFunc}/>)
+    let scheduleItems = props.schedules.map(schedule => <Schedule roomDetails={props.roomDetails} scheduleData={schedule} key={schedule.id} userManager={props.userManager} modifyScheduleFunc={props.modifyScheduleFunc} modifyRoomFunc={props.modifyRoomFunc}/>)
 
     return (
         <div className="col-span-3 text-center bg-sky-700 p-5 rounded-lg">

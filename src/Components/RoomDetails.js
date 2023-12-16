@@ -32,6 +32,7 @@ export default function RoomDetails(props) {
                     return
                 }
                 alert("Room successfully deleted!")
+                props.modifyRoomFunc(prevState => prevState.filter(state => state.id !== props.roomDetails.id))
                 props.toggleScreenFunc()
             }
             catch (error) {

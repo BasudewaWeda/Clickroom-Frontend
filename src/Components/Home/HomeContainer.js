@@ -1,12 +1,19 @@
-import Analytics from "./Analytics"
-import Cards from "./Cards"
+import About from "./About"
+import Benefit from "./Benefit"
+import Hero from "./Hero"
+import Navbar from "./Navbar"
+import Features from "./Featured"
+import Footer from "./Footer"
 
 export default function HomeContainer(props) {
     return (
-        <div>
-            <Analytics/>
-            <Cards/>
-            <button onClick={props.modifyScreenIndexFunc}>LogIn</button>
+        <div className="scroll-smooth">
+            <Navbar/>
+            <Hero modifyScreenIndexFunc={props.modifyScreenIndexFunc}/>
+            <About/>
+            <Features/>
+            <Benefit/>
+            <Footer/>
         </div>
     )
 }

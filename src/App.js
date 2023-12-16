@@ -27,7 +27,7 @@ export default function App() {
                 screenIndex === 0 ? 
                     <HomeContainer modifyScreenIndexFunc={setScreenIndex}/> 
                 : 
-                    (!userManager.loggedIn && <Login loginFunc={logIn}/>) || 
+                    (!userManager.loggedIn && <Login loginFunc={logIn} modifyScreenIndexFunc={setScreenIndex}/>) || 
                     (userManager.loggedIn && <MainContainer userManager={userManager} modifyUserManager={setUserManager}/>)
             }
         </>
