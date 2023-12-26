@@ -1,4 +1,5 @@
 import { useState } from "react"
+import Swal from "sweetalert2"
 
 export default function Home(props) {
     const [newUserData, setNewUserData] = useState({
@@ -23,12 +24,28 @@ export default function Home(props) {
 
         try {
             if(newUserData.username === '' || newUserData.password === '' || newUserData.passwordConfirm === '' || newUserData.email === '') {
-                alert("Fill all fields!")
+                Swal.fire({
+                    title: "Fill all fields!",
+                    icon: "warning",
+                    customClass: {
+                        popup: 'bg-sky-500',
+                        title: 'text-zinc-50',
+                        confirmButton: '!bg-zinc-50 !text-sky-500 hover:!bg-sky-500 hover:!text-zinc-50 focus:!ring-0 !transition-all !ease-in !duration-75',
+                    }
+                })
                 return
             }
 
             if(newUserData.password !== newUserData.passwordConfirm) {
-                alert('Password and Confirm Password must Match')
+                Swal.fire({
+                    title: "Password and Confirm Password must match.",
+                    icon: "warning",
+                    customClass: {
+                        popup: 'bg-sky-500',
+                        title: 'text-zinc-50',
+                        confirmButton: '!bg-zinc-50 !text-sky-500 hover:!bg-sky-500 hover:!text-zinc-50 focus:!ring-0 !transition-all !ease-in !duration-75',
+                    }
+                })
                 return
             }
 
@@ -42,11 +59,28 @@ export default function Home(props) {
             })
 
             if(!response.ok) {
-                alert("Something went wrong")
+                Swal.fire({
+                    title: "Something went wrong.",
+                    icon: "error",
+                    customClass: {
+                        popup: 'bg-sky-500',
+                        title: 'text-zinc-50',
+                        confirmButton: '!bg-zinc-50 !text-sky-500 hover:!bg-sky-500 hover:!text-zinc-50 focus:!ring-0 !transition-all !ease-in !duration-75',
+                    }
+                })
                 return
             }
 
-            alert("New User successfully created!")
+            Swal.fire({
+                title: "New User successfully created!",
+                icon: "success",
+                iconColor: "#fafafa",
+                customClass: {
+                    popup: 'bg-sky-500',
+                    title: 'text-zinc-50',
+                    confirmButton: '!bg-zinc-50 !text-sky-500 hover:!bg-sky-500 hover:!text-zinc-50 focus:!ring-0 !transition-all !ease-in !duration-75',
+                }
+            })
             setNewUserData({
                 username: '',
                 password: '',
@@ -55,7 +89,15 @@ export default function Home(props) {
             })
         }
         catch (error) {
-            alert(error)
+            Swal.fire({
+                title: error,
+                icon: "error",
+                customClass: {
+                    popup: 'bg-sky-500',
+                    title: 'text-zinc-50',
+                    confirmButton: '!bg-zinc-50 !text-sky-500 hover:!bg-sky-500 hover:!text-zinc-50 focus:!ring-0 !transition-all !ease-in !duration-75',
+                }
+            })
         }
     }
 

@@ -1,5 +1,7 @@
 import { useState } from "react"
 
+import Swal from "sweetalert2"
+
 export default function Facility(props) {
 
     const [isEditing, setIsEditing] = useState(false)
@@ -31,8 +33,22 @@ export default function Facility(props) {
         }
     }
 
-    async function deleteButtonClicked() {
-        if(window.confirm("Are you sure you want to delete this facility?")) {
+    function deleteButtonClicked() {
+        Swal.fire({
+            title: "Are you sure you want to delete this facility?",
+            showCancelButton: true,
+            confirmButtonText: "Yes",
+            customClass: {
+                popup: 'bg-sky-500',
+                title: 'text-zinc-50',
+                confirmButton: '!bg-zinc-50 !text-sky-500 hover:!bg-sky-500 hover:!text-zinc-50 focus:!ring-0 !transition-all !ease-in !duration-75',
+                cancelButton: '!bg-zinc-50 !text-sky-500 hover:!bg-sky-500 hover:!text-zinc-50 focus:!ring-0 !transition-all !ease-in !duration-75',
+            }
+        }).then((result) => handleDelete(result))
+    }
+
+    async function handleDelete(result) {
+        if(result.isConfirmed) {
             try {
                 let response = await fetch(`http://localhost:8080/api/v1/facility/admin/${props.facilityData.id}`, {
                     method: 'DELETE',
@@ -42,14 +58,39 @@ export default function Facility(props) {
                     },
                 })
                 if(!response.ok) {
-                    alert("Something went wrong")
+                    Swal.fire({
+                        title: "Something went wrong.",
+                        icon: "error",
+                        customClass: {
+                            popup: 'bg-sky-500',
+                            title: 'text-zinc-50',
+                            confirmButton: '!bg-zinc-50 !text-sky-500 hover:!bg-sky-500 hover:!text-zinc-50 focus:!ring-0 !transition-all !ease-in !duration-75',
+                        }
+                    })
                     return
                 }
-                alert("Facility successfully deleted!")
+                Swal.fire({
+                    title: "Facility successfully deleted!",
+                    icon: "success",
+                    iconColor: "#fafafa",
+                    customClass: {
+                        popup: 'bg-sky-500',
+                        title: 'text-zinc-50',
+                        confirmButton: '!bg-zinc-50 !text-sky-500 hover:!bg-sky-500 hover:!text-zinc-50 focus:!ring-0 !transition-all !ease-in !duration-75',
+                    }
+                })
                 props.modifyFacilityFunc(prevState => prevState.filter(prevState => prevState.id !== props.facilityData.id))
             }
             catch (error) {
-                alert(error)
+                Swal.fire({
+                    title: error,
+                    icon: "error",
+                    customClass: {
+                        popup: 'bg-sky-500',
+                        title: 'text-zinc-50',
+                        confirmButton: '!bg-zinc-50 !text-sky-500 hover:!bg-sky-500 hover:!text-zinc-50 focus:!ring-0 !transition-all !ease-in !duration-75',
+                    }
+                })
             }
         }
     }
@@ -57,12 +98,28 @@ export default function Facility(props) {
     async function updateFacility(event) {
         event.preventDefault()
         if(facilityUpdateData.facilityAmount === '' || facilityUpdateData.facilityName === '') {
-            alert('Please fill all fields')
+            Swal.fire({
+                title: "Fill all fields!",
+                icon: "warning",
+                customClass: {
+                    popup: 'bg-sky-500',
+                    title: 'text-zinc-50',
+                    confirmButton: '!bg-zinc-50 !text-sky-500 hover:!bg-sky-500 hover:!text-zinc-50 focus:!ring-0 !transition-all !ease-in !duration-75',
+                }
+            })
             return
         }
 
         if(!(/^\d+$/.test(facilityUpdateData.facilityAmount))) {
-            alert("Amount must be a number")
+            Swal.fire({
+                title: "Amount must be a number.",
+                icon: "warning",
+                customClass: {
+                    popup: 'bg-sky-500',
+                    title: 'text-zinc-50',
+                    confirmButton: '!bg-zinc-50 !text-sky-500 hover:!bg-sky-500 hover:!text-zinc-50 focus:!ring-0 !transition-all !ease-in !duration-75',
+                }
+            })
             return
         }
 
@@ -76,15 +133,40 @@ export default function Facility(props) {
                 body: JSON.stringify(facilityUpdateData)
             })
             if(!response.ok) {
-                alert("Something went wrong")
+                Swal.fire({
+                    title: "Something went wrong.",
+                    icon: "error",
+                    customClass: {
+                        popup: 'bg-sky-500',
+                        title: 'text-zinc-50',
+                        confirmButton: '!bg-zinc-50 !text-sky-500 hover:!bg-sky-500 hover:!text-zinc-50 focus:!ring-0 !transition-all !ease-in !duration-75',
+                    }
+                })
                 return
             }
-            alert("Facility successfully updated!")
+            Swal.fire({
+                title: "Facility successfully created!",
+                icon: "success",
+                iconColor: "#fafafa",
+                customClass: {
+                    popup: 'bg-sky-500',
+                    title: 'text-zinc-50',
+                    confirmButton: '!bg-zinc-50 !text-sky-500 hover:!bg-sky-500 hover:!text-zinc-50 focus:!ring-0 !transition-all !ease-in !duration-75',
+                }
+            })
             toggleEditing()
             props.modifyFacilityFunc(prevState => prevState.map(state => state.id !== props.facilityData.id ? state : {...state, facilityName: facilityUpdateData.facilityName, facilityAmount: facilityUpdateData.facilityAmount}))
         }
         catch (error) {
-            alert(error)
+            Swal.fire({
+                title: error,
+                icon: "error",
+                customClass: {
+                    popup: 'bg-sky-500',
+                    title: 'text-zinc-50',
+                    confirmButton: '!bg-zinc-50 !text-sky-500 hover:!bg-sky-500 hover:!text-zinc-50 focus:!ring-0 !transition-all !ease-in !duration-75',
+                }
+            })
         }
     }
 

@@ -3,6 +3,8 @@ import Room from './Room'
 import RoomDetails from './RoomDetails'
 import NewRoomForm from "./Admin/NewRoomForm"
 
+import Swal from "sweetalert2"
+
 export default function Home(props) {
     const [roomData, setRoomData] = useState([])
     const [screenIndex, setScreenIndex] = useState(0)
@@ -27,7 +29,15 @@ export default function Home(props) {
             })
         }
         catch (error) {
-            alert(error)
+            Swal.fire({
+                title: error,
+                icon: "error",
+                customClass: {
+                    popup: 'bg-sky-500',
+                    title: 'text-zinc-50',
+                    confirmButton: '!bg-zinc-50 !text-sky-500 hover:!bg-sky-500 hover:!text-zinc-50 focus:!ring-0 !transition-all !ease-in !duration-75',
+                }
+            })
         }
     }, [screenIndex])
 

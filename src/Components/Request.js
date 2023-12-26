@@ -1,5 +1,7 @@
 import { useState } from "react"
 
+import Swal from "sweetalert2"
+
 export default function Request(props) {
     const [isEditing, setIsEditing] = useState(false)
     const [requestUpdateData, setRequestUpdateData] = useState({
@@ -25,18 +27,51 @@ export default function Request(props) {
                 },
             })
             if(response.status === 400) {
-                alert("Request schedule collides with another schedule")
+                Swal.fire({
+                    title: "Requested schedule collides with another schedule.",
+                    icon: "warning",
+                    customClass: {
+                        popup: 'bg-sky-500',
+                        title: 'text-zinc-50',
+                        confirmButton: '!bg-zinc-50 !text-sky-500 hover:!bg-sky-500 hover:!text-zinc-50 focus:!ring-0 !transition-all !ease-in !duration-75',
+                    }
+                })
                 return
             }
             if(!response.ok) {
-                alert("Something went wrong")
+                Swal.fire({
+                    title: "Something went wrong.",
+                    icon: "warning",
+                    customClass: {
+                        popup: 'bg-sky-500',
+                        title: 'text-zinc-50',
+                        confirmButton: '!bg-zinc-50 !text-sky-500 hover:!bg-sky-500 hover:!text-zinc-50 focus:!ring-0 !transition-all !ease-in !duration-75',
+                    }
+                })
                 return
             }
-            alert("Request successfully modified!")
+            Swal.fire({
+                title: "Request successfully modified!",
+                icon: "success",
+                iconColor: "#fafafa",
+                customClass: {
+                    popup: 'bg-sky-500',
+                    title: 'text-zinc-50',
+                    confirmButton: '!bg-zinc-50 !text-sky-500 hover:!bg-sky-500 hover:!text-zinc-50 focus:!ring-0 !transition-all !ease-in !duration-75',
+                }
+            })
             props.modifyRequestFunc(prevState => prevState.map(state => state.id === props.requestData.id ? {...state, requestStatus: 'ACCEPTED'} : state))
         }
         catch (error) {
-            alert(error)
+            Swal.fire({
+                title: error,
+                icon: "error",
+                customClass: {
+                    popup: 'bg-sky-500',
+                    title: 'text-zinc-50',
+                    confirmButton: '!bg-zinc-50 !text-sky-500 hover:!bg-sky-500 hover:!text-zinc-50 focus:!ring-0 !transition-all !ease-in !duration-75',
+                }
+            })
         }
     }
 
@@ -50,47 +85,129 @@ export default function Request(props) {
                 },
             })
             if(!response.ok) {
-                alert("Something went wrong")
+                Swal.fire({
+                    title: "Something went wrong.",
+                    icon: "error",
+                    customClass: {
+                        popup: 'bg-sky-500',
+                        title: 'text-zinc-50',
+                        confirmButton: '!bg-zinc-50 !text-sky-500 hover:!bg-sky-500 hover:!text-zinc-50 focus:!ring-0 !transition-all !ease-in !duration-75',
+                    }
+                })
                 return
             }
-            alert("Request successfully modified!")
+            Swal.fire({
+                title: "Request successfully modified!",
+                icon: "success",
+                iconColor: "#fafafa",
+                customClass: {
+                    popup: 'bg-sky-500',
+                    title: 'text-zinc-50',
+                    confirmButton: '!bg-zinc-50 !text-sky-500 hover:!bg-sky-500 hover:!text-zinc-50 focus:!ring-0 !transition-all !ease-in !duration-75',
+                }
+            })
             props.modifyRequestFunc(prevState => prevState.map(state => state.id === props.requestData.id ? {...state, requestStatus: 'DECLINED'} : state))
         }
         catch (error) {
-            alert(error)
+            Swal.fire({
+                title: error,
+                icon: "error",
+                customClass: {
+                    popup: 'bg-sky-500',
+                    title: 'text-zinc-50',
+                    confirmButton: '!bg-zinc-50 !text-sky-500 hover:!bg-sky-500 hover:!text-zinc-50 focus:!ring-0 !transition-all !ease-in !duration-75',
+                }
+            })
         }
     }
 
-    async function DeleteRequest() {
-        try {
-            let response = await fetch(`http://localhost:8080/api/v1/request/${props.requestData.id}`, {
-                method: 'DELETE',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': 'Bearer '.concat(props.userManager.token)
-                },
-            })
-            if(!response.ok) {
-                alert("Something went wrong")
-                return
+    function DeleteRequest() {
+        Swal.fire({
+            title: "Are you sure you want to delete this request?",
+            showCancelButton: true,
+            confirmButtonText: "Yes",
+            customClass: {
+                popup: 'bg-sky-500',
+                title: 'text-zinc-50',
+                confirmButton: '!bg-zinc-50 !text-sky-500 hover:!bg-sky-500 hover:!text-zinc-50 focus:!ring-0 !transition-all !ease-in !duration-75',
+                cancelButton: '!bg-zinc-50 !text-sky-500 hover:!bg-sky-500 hover:!text-zinc-50 focus:!ring-0 !transition-all !ease-in !duration-75',
             }
-            alert("Request successfully deleted!")
-            props.modifyRequestFunc(prevState => prevState.filter(state => state.id !== props.requestData.id))
-        }
-        catch (error) {
-            alert(error)
+        }).then((result) => handleDeleteRequest(result))
+    }
+
+    async function handleDeleteRequest(result) {
+        if(result.isConfirmed) {
+            try {
+                let response = await fetch(`http://localhost:8080/api/v1/request/${props.requestData.id}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer '.concat(props.userManager.token)
+                    },
+                })
+                if(!response.ok) {
+                    Swal.fire({
+                        title: "Something went wrong.",
+                        icon: "error",
+                        customClass: {
+                            popup: 'bg-sky-500',
+                            title: 'text-zinc-50',
+                            confirmButton: '!bg-zinc-50 !text-sky-500 hover:!bg-sky-500 hover:!text-zinc-50 focus:!ring-0 !transition-all !ease-in !duration-75',
+                        }
+                    })
+                    return
+                }
+                Swal.fire({
+                    title: "Request successfully deleted!",
+                    icon: "success",
+                    iconColor: "#fafafa",
+                    customClass: {
+                        popup: 'bg-sky-500',
+                        title: 'text-zinc-50',
+                        confirmButton: '!bg-zinc-50 !text-sky-500 hover:!bg-sky-500 hover:!text-zinc-50 focus:!ring-0 !transition-all !ease-in !duration-75',
+                    }
+                })
+                props.modifyRequestFunc(prevState => prevState.filter(state => state.id !== props.requestData.id))
+            }
+            catch (error) {
+                Swal.fire({
+                    title: error,
+                    icon: "error",
+                    customClass: {
+                        popup: 'bg-sky-500',
+                        title: 'text-zinc-50',
+                        confirmButton: '!bg-zinc-50 !text-sky-500 hover:!bg-sky-500 hover:!text-zinc-50 focus:!ring-0 !transition-all !ease-in !duration-75',
+                    }
+                })
+            }
         }
     }
 
     async function updateRequest(event) {
         event.preventDefault()
         if(requestUpdateData.borrowDate === '' || requestUpdateData.borrowDetail === '' || requestUpdateData.startTime === '' || requestUpdateData.endTime === '') {
-            alert("Plase fill all fields")
+            Swal.fire({
+                title: "Fill all fields!",
+                icon: "warning",
+                customClass: {
+                    popup: 'bg-sky-500',
+                    title: 'text-zinc-50',
+                    confirmButton: '!bg-zinc-50 !text-sky-500 hover:!bg-sky-500 hover:!text-zinc-50 focus:!ring-0 !transition-all !ease-in !duration-75',
+                }
+            })
             return
         }
 
         if(requestUpdateData.startTime > requestUpdateData.endTime) {
-            alert("Start time cannot be later than end time")
+            Swal.fire({
+                title: "Start time cannot be later than end time.",
+                icon: "warning",
+                customClass: {
+                    popup: 'bg-sky-500',
+                    title: 'text-zinc-50',
+                    confirmButton: '!bg-zinc-50 !text-sky-500 hover:!bg-sky-500 hover:!text-zinc-50 focus:!ring-0 !transition-all !ease-in !duration-75',
+                }
+            })
             return
         }
 
@@ -105,21 +222,54 @@ export default function Request(props) {
             })
 
             if(response.status === 400) {
-                alert("Updated request collides with another schedule")
+                Swal.fire({
+                    title: "Updated request collides with another schedule.",
+                    icon: "error",
+                    customClass: {
+                        popup: 'bg-sky-500',
+                        title: 'text-zinc-50',
+                        confirmButton: '!bg-zinc-50 !text-sky-500 hover:!bg-sky-500 hover:!text-zinc-50 focus:!ring-0 !transition-all !ease-in !duration-75',
+                    }
+                })
                 return
             }
 
             if(!response.ok) {
-                alert("Something went wrong")
+                Swal.fire({
+                    title: "Something went wrong.",
+                    icon: "error",
+                    customClass: {
+                        popup: 'bg-sky-500',
+                        title: 'text-zinc-50',
+                        confirmButton: '!bg-zinc-50 !text-sky-500 hover:!bg-sky-500 hover:!text-zinc-50 focus:!ring-0 !transition-all !ease-in !duration-75',
+                    }
+                })
                 return
             }
 
-            alert("Request successfully updated!")
+            Swal.fire({
+                title: "Request successfully updated!",
+                icon: "success",
+                iconColor: "#fafafa",
+                customClass: {
+                    popup: 'bg-sky-500',
+                    title: 'text-zinc-50',
+                    confirmButton: '!bg-zinc-50 !text-sky-500 hover:!bg-sky-500 hover:!text-zinc-50 focus:!ring-0 !transition-all !ease-in !duration-75',
+                }
+            })
             toggleEditing()
             props.modifyRequestFunc(prevState => prevState.map(state => state.id !== props.requestData.id ? state : {...state, borrowDate: requestUpdateData.borrowDate, startTime: requestUpdateData.startTime, endTime: requestUpdateData.endTime, borrowDetail: requestUpdateData.borrowDetail}))
         }
         catch (error) {
-            alert(error)
+            Swal.fire({
+                title: error,
+                icon: "error",
+                customClass: {
+                    popup: 'bg-sky-500',
+                    title: 'text-zinc-50',
+                    confirmButton: '!bg-zinc-50 !text-sky-500 hover:!bg-sky-500 hover:!text-zinc-50 focus:!ring-0 !transition-all !ease-in !duration-75',
+                }
+            })
         }
     }
 

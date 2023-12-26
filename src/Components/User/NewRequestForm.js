@@ -1,5 +1,7 @@
 import { useState } from "react"
 
+import Swal from "sweetalert2"
+
 export default function NewRequestForm(props) {
     const [newRequestData, setNewRequestData] = useState({
         borrowDate: "",
@@ -27,12 +29,28 @@ export default function NewRequestForm(props) {
     async function handleRequest(event) {
         event.preventDefault()
         if(newRequestData.borrowDate === '' || newRequestData.startTime === '' || newRequestData.endTime === '' || newRequestData.borrowDetail === '') {
-            alert("Please fill all fields")
+            Swal.fire({
+                title: "Fill all fields!",
+                icon: "warning",
+                customClass: {
+                    popup: 'bg-sky-500',
+                    title: 'text-zinc-50',
+                    confirmButton: '!bg-zinc-50 !text-sky-500 hover:!bg-sky-500 hover:!text-zinc-50 focus:!ring-0 !transition-all !ease-in !duration-75',
+                }
+            })
             return
         }
 
         if(newRequestData.startTime > newRequestData.endTime) {
-            alert("Start time cannot be later than end time")
+            Swal.fire({
+                title: "Start time cannot be later than end time.",
+                icon: "warning",
+                customClass: {
+                    popup: 'bg-sky-500',
+                    title: 'text-zinc-50',
+                    confirmButton: '!bg-zinc-50 !text-sky-500 hover:!bg-sky-500 hover:!text-zinc-50 focus:!ring-0 !transition-all !ease-in !duration-75',
+                }
+            })
             return
         }
 
@@ -47,16 +65,41 @@ export default function NewRequestForm(props) {
             })
 
             if(response.status === 400) {
-                alert("New request collides with existing schedule")
+                Swal.fire({
+                    title: "New request collides with exisiting schedule.",
+                    icon: "warning",
+                    customClass: {
+                        popup: 'bg-sky-500',
+                        title: 'text-zinc-50',
+                        confirmButton: '!bg-zinc-50 !text-sky-500 hover:!bg-sky-500 hover:!text-zinc-50 focus:!ring-0 !transition-all !ease-in !duration-75',
+                    }
+                })
                 return
             }
 
             if(!response.ok) {
-                alert("Something went wrong")
+                Swal.fire({
+                    title: "Something went wrong.",
+                    icon: "error",
+                    customClass: {
+                        popup: 'bg-sky-500',
+                        title: 'text-zinc-50',
+                        confirmButton: '!bg-zinc-50 !text-sky-500 hover:!bg-sky-500 hover:!text-zinc-50 focus:!ring-0 !transition-all !ease-in !duration-75',
+                    }
+                })
                 return
             }
 
-            alert("Request successfully created!")
+            Swal.fire({
+                title: "Request successfully created!",
+                icon: "success",
+                iconColor: "#fafafa",
+                customClass: {
+                    popup: 'bg-sky-500',
+                    title: 'text-zinc-50',
+                    confirmButton: '!bg-zinc-50 !text-sky-500 hover:!bg-sky-500 hover:!text-zinc-50 focus:!ring-0 !transition-all !ease-in !duration-75',
+                }
+            })
 
             setNewRequestData(prevState => (
                 {
@@ -69,7 +112,15 @@ export default function NewRequestForm(props) {
             ))
         }
         catch (error) {
-            alert(error)
+            Swal.fire({
+                title: error,
+                icon: "error",
+                customClass: {
+                    popup: 'bg-sky-500',
+                    title: 'text-zinc-50',
+                    confirmButton: '!bg-zinc-50 !text-sky-500 hover:!bg-sky-500 hover:!text-zinc-50 focus:!ring-0 !transition-all !ease-in !duration-75',
+                }
+            })
         }
     }
     

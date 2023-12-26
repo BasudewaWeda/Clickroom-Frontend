@@ -1,4 +1,5 @@
 import { useState } from "react"
+import Swal from "sweetalert2"
 
 export default function NewFacilityForm(props) {
     const [facilityData, setFacilityData] = useState({
@@ -15,12 +16,28 @@ export default function NewFacilityForm(props) {
     async function handleRequest(event) {
         event.preventDefault()
         if(facilityData.facilityName === '' || facilityData.facilityAmount === '') {
-            alert("Fill all fields!")
+            Swal.fire({
+                title: "Fill all fields!",
+                icon: "warning",
+                customClass: {
+                    popup: 'bg-sky-500',
+                    title: 'text-zinc-50',
+                    confirmButton: '!bg-zinc-50 !text-sky-500 hover:!bg-sky-500 hover:!text-zinc-50 focus:!ring-0 !transition-all !ease-in !duration-75',
+                }
+            })
             return
         }
 
         if(!(/^\d+$/.test(facilityData.facilityAmount))) {
-            alert("Amount must be a number")
+            Swal.fire({
+                title: "Amount must be a number.",
+                icon: "warning",
+                customClass: {
+                    popup: 'bg-sky-500',
+                    title: 'text-zinc-50',
+                    confirmButton: '!bg-zinc-50 !text-sky-500 hover:!bg-sky-500 hover:!text-zinc-50 focus:!ring-0 !transition-all !ease-in !duration-75',
+                }
+            })
             return
         }
 
@@ -35,11 +52,28 @@ export default function NewFacilityForm(props) {
             })
 
             if(!response.ok) {
-                alert("Something went wrong")
+                Swal.fire({
+                    title: "Something went wrong.",
+                    icon: "error",
+                    customClass: {
+                        popup: 'bg-sky-500',
+                        title: 'text-zinc-50',
+                        confirmButton: '!bg-zinc-50 !text-sky-500 hover:!bg-sky-500 hover:!text-zinc-50 focus:!ring-0 !transition-all !ease-in !duration-75',
+                    }
+                })
                 return
             }
 
-            alert("Facility successfully created!")
+            Swal.fire({
+                title: "Facility successfully created!",
+                icon: "success",
+                iconColor: "#fafafa",
+                customClass: {
+                    popup: 'bg-sky-500',
+                    title: 'text-zinc-50',
+                    confirmButton: '!bg-zinc-50 !text-sky-500 hover:!bg-sky-500 hover:!text-zinc-50 focus:!ring-0 !transition-all !ease-in !duration-75',
+                }
+            })
             let data = await response.json()
             let newFacility = {
                 id: data.split("/")[4],
@@ -60,7 +94,15 @@ export default function NewFacilityForm(props) {
             ))
         }
         catch (error) {
-            alert(error)
+            Swal.fire({
+                title: error,
+                icon: "error",
+                customClass: {
+                    popup: 'bg-sky-500',
+                    title: 'text-zinc-50',
+                    confirmButton: '!bg-zinc-50 !text-sky-500 hover:!bg-sky-500 hover:!text-zinc-50 focus:!ring-0 !transition-all !ease-in !duration-75',
+                }
+            })
         }
     }
 

@@ -1,6 +1,22 @@
+import Swal from "sweetalert2"
+
 export default function MySchedule(props) {
     async function deleteSchedule() {
-        if(window.confirm("Are you sure you want to delete this schedule?")) {
+        Swal.fire({
+            title: "Are you sure you want to delete this schedule?",
+            showCancelButton: true,
+            confirmButtonText: "Yes",
+            customClass: {
+                popup: 'bg-sky-500',
+                title: 'text-zinc-50',
+                confirmButton: '!bg-zinc-50 !text-sky-500 hover:!bg-sky-500 hover:!text-zinc-50 focus:!ring-0 !transition-all !ease-in !duration-75',
+                cancelButton: '!bg-zinc-50 !text-sky-500 hover:!bg-sky-500 hover:!text-zinc-50 focus:!ring-0 !transition-all !ease-in !duration-75',
+            }
+        }).then((result) => handleDelete(result))
+    }
+
+    async function handleDelete(result) {
+        if(result.isConfirmed) {
             try {
                 let response = await fetch(`http://localhost:8080/api/v1/schedule/${props.scheduleData.id}`, {
                     method: 'DELETE',
@@ -10,14 +26,39 @@ export default function MySchedule(props) {
                     },
                 })
                 if(!response.ok) {
-                    alert("Something went wrong")
+                    Swal.fire({
+                        title: "Something went wrong.",
+                        icon: "error",
+                        customClass: {
+                            popup: 'bg-sky-500',
+                            title: 'text-zinc-50',
+                            confirmButton: '!bg-zinc-50 !text-sky-500 hover:!bg-sky-500 hover:!text-zinc-50 focus:!ring-0 !transition-all !ease-in !duration-75',
+                        }
+                    })
                     return
                 }
-                alert("Schedule successfully deleted!")
+                Swal.fire({
+                    title: "Schedule successfully deleted!",
+                    icon: "success",
+                    iconColor: "#fafafa",
+                    customClass: {
+                        popup: 'bg-sky-500',
+                        title: 'text-zinc-50',
+                        confirmButton: '!bg-zinc-50 !text-sky-500 hover:!bg-sky-500 hover:!text-zinc-50 focus:!ring-0 !transition-all !ease-in !duration-75',
+                    }
+                })
                 props.modifyScheduleFunc(prevState => prevState.filter(state => state.id !== props.scheduleData.id))
             }
             catch (error) {
-                alert(error)
+                Swal.fire({
+                    title: error,
+                    icon: "error",
+                    customClass: {
+                        popup: 'bg-sky-500',
+                        title: 'text-zinc-50',
+                        confirmButton: '!bg-zinc-50 !text-sky-500 hover:!bg-sky-500 hover:!text-zinc-50 focus:!ring-0 !transition-all !ease-in !duration-75',
+                    }
+                })
             }
         }
     }

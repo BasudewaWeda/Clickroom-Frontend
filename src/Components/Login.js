@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import loginImage from '../Images/LoginImage.png'
 
+import Swal from 'sweetalert2';
+
 export default function Login(props) {
 
     const [formData, setFormData] = useState({
@@ -35,14 +37,30 @@ export default function Login(props) {
                 return
             }
             if(!response.ok) {
-                alert("Something went wrong")
+                Swal.fire({
+                    title: "Something went wrong.",
+                    icon: "error",
+                    customClass: {
+                        popup: 'bg-sky-500',
+                        title: 'text-zinc-50',
+                        confirmButton: '!bg-zinc-50 !text-sky-500 hover:!bg-sky-500 hover:!text-zinc-50 focus:!ring-0 !transition-all !ease-in !duration-75',
+                    }
+                })
                 return
             } 
             let data = await response.json()
             props.loginFunc(data.token, data.username, data.role)
         }
         catch (error) {
-            alert(error)
+            Swal.fire({
+                title: error,
+                icon: "error",
+                customClass: {
+                    popup: 'bg-sky-500',
+                    title: 'text-zinc-50',
+                    confirmButton: '!bg-zinc-50 !text-sky-500 hover:!bg-sky-500 hover:!text-zinc-50 focus:!ring-0 !transition-all !ease-in !duration-75',
+                }
+            })
         }
     }
     

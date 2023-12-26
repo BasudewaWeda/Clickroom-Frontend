@@ -1,4 +1,5 @@
 import { useState } from "react"
+import Swal from "sweetalert2"
 
 export default function UpdateRoomForm(props) {
     const [roomUpdateData, setRoomUpdateData] = useState({
@@ -10,12 +11,28 @@ export default function UpdateRoomForm(props) {
     async function handleRequest(event) {
         event.preventDefault()
         if(roomUpdateData.roomCapacity === '' || roomUpdateData.roomLocation === '' || roomUpdateData.roomName === '') {
-            alert("Fill all fields")
+            Swal.fire({
+                title: "Fill all fields!",
+                icon: "warning",
+                customClass: {
+                    popup: 'bg-sky-500',
+                    title: 'text-zinc-50',
+                    confirmButton: '!bg-zinc-50 !text-sky-500 hover:!bg-sky-500 hover:!text-zinc-50 focus:!ring-0 !transition-all !ease-in !duration-75',
+                }
+            })
             return
         }
 
         if(!(/^\d+$/.test(roomUpdateData.roomCapacity))) {
-            alert("Room capacity must be a number")
+            Swal.fire({
+                title: "Room Capacity must be a number.",
+                icon: "warning",
+                customClass: {
+                    popup: 'bg-sky-500',
+                    title: 'text-zinc-50',
+                    confirmButton: '!bg-zinc-50 !text-sky-500 hover:!bg-sky-500 hover:!text-zinc-50 focus:!ring-0 !transition-all !ease-in !duration-75',
+                }
+            })
             return
         }
 
@@ -29,15 +46,41 @@ export default function UpdateRoomForm(props) {
                 body: JSON.stringify(roomUpdateData)
             })
             if(!response.ok) {
-                alert("Something went wrong")
+                Swal.fire({
+                    title: "Something went wrong.",
+                    icon: "error",
+                    customClass: {
+                        popup: 'bg-sky-500',
+                        title: 'text-zinc-50',
+                        confirmButton: '!bg-zinc-50 !text-sky-500 hover:!bg-sky-500 hover:!text-zinc-50 focus:!ring-0 !transition-all !ease-in !duration-75',
+                    }
+                })
                 return
             }
-            alert("Room successfully updated!")
+            
+            Swal.fire({
+                title: "Room successfully updated!",
+                icon: "success",
+                iconColor: "#fafafa",
+                customClass: {
+                    popup: 'bg-sky-500',
+                    title: 'text-zinc-50',
+                    confirmButton: '!bg-zinc-50 !text-sky-500 hover:!bg-sky-500 hover:!text-zinc-50 focus:!ring-0 !transition-all !ease-in !duration-75',
+                }
+            })
             props.modifyRoomFunc(prevState => prevState.map(state => state.id !== props.roomData.id ? state : {...state, roomName: roomUpdateData.roomName, roomCapacity: roomUpdateData.roomCapacity, roomLocation: roomUpdateData.roomLocation}))
             props.modifyRoomDataFunc(roomUpdateData)
         }
         catch (error) {
-            alert(error)
+            Swal.fire({
+                title: error,
+                icon: "error",
+                customClass: {
+                    popup: 'bg-sky-500',
+                    title: 'text-zinc-50',
+                    confirmButton: '!bg-zinc-50 !text-sky-500 hover:!bg-sky-500 hover:!text-zinc-50 focus:!ring-0 !transition-all !ease-in !duration-75',
+                }
+            })
         }
     }
 

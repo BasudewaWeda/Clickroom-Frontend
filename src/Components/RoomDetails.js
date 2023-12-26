@@ -6,6 +6,8 @@ import FacilityContainer from "./FacilityContainer"
 import NewRequestForm from "./User/NewRequestForm"
 import MyScheduleInRoomDetailsContainer from "./User/MyScheduleInRoomDetailsContainer"
 
+import Swal from "sweetalert2"
+
 import { useState } from 'react'
 
 export default function RoomDetails(props) {
@@ -17,8 +19,22 @@ export default function RoomDetails(props) {
         roomLocation: props.roomDetails.roomLocation
     })
 
-    async function deleteButtonClicked() {
-        if(window.confirm("Are you sure you want to delete this room?")) {
+    function deleteButtonClicked() {
+        Swal.fire({
+            title: "Are you sure you want to delete this room?",
+            showCancelButton: true,
+            confirmButtonText: "Yes",
+            customClass: {
+                popup: 'bg-sky-500',
+                title: 'text-zinc-50',
+                confirmButton: '!bg-zinc-50 !text-sky-500 hover:!bg-sky-500 hover:!text-zinc-50 focus:!ring-0 !transition-all !ease-in !duration-75',
+                cancelButton: '!bg-zinc-50 !text-sky-500 hover:!bg-sky-500 hover:!text-zinc-50 focus:!ring-0 !transition-all !ease-in !duration-75',
+            }
+        }).then((result) => handleDelete(result))
+    }
+
+    async function handleDelete(result) {
+        if(result.isConfirmed) {
             try {
                 let response = await fetch(`http://localhost:8080/api/v1/room/admin/${props.roomDetails.id}`, {
                     method: 'DELETE',
@@ -28,15 +44,40 @@ export default function RoomDetails(props) {
                     },
                 })
                 if(!response.ok) {
-                    alert("Something went wrong")
+                    Swal.fire({
+                        title: "Something went wrong.",
+                        icon: "error",
+                        customClass: {
+                            popup: 'bg-sky-500',
+                            title: 'text-zinc-50',
+                            confirmButton: '!bg-zinc-50 !text-sky-500 hover:!bg-sky-500 hover:!text-zinc-50 focus:!ring-0 !transition-all !ease-in !duration-75',
+                        }
+                    })    
                     return
                 }
-                alert("Room successfully deleted!")
                 props.modifyRoomFunc(prevState => prevState.filter(state => state.id !== props.roomDetails.id))
+                Swal.fire({
+                    title: "Room successfully deleted!",
+                    icon: "success",
+                    iconColor: "#fafafa",
+                    customClass: {
+                        popup: 'bg-sky-500',
+                        title: 'text-zinc-50',
+                        confirmButton: '!bg-zinc-50 !text-sky-500 hover:!bg-sky-500 hover:!text-zinc-50 focus:!ring-0 !transition-all !ease-in !duration-75',
+                    }
+                })
                 props.toggleScreenFunc()
             }
             catch (error) {
-                alert(error)
+                Swal.fire({
+                    title: error,
+                    icon: "error",
+                    customClass: {
+                        popup: 'bg-sky-500',
+                        title: 'text-zinc-50',
+                        confirmButton: '!bg-zinc-50 !text-sky-500 hover:!bg-sky-500 hover:!text-zinc-50 focus:!ring-0 !transition-all !ease-in !duration-75',
+                    }
+                }) 
             }
         }
     }

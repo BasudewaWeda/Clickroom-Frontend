@@ -1,4 +1,5 @@
 import { useState } from "react"
+import Swal from "sweetalert2"
 
 export default function NewRoomForm(props) {
     const [newRoomData, setNewRoomData] = useState({
@@ -10,12 +11,28 @@ export default function NewRoomForm(props) {
     async function handleRequest(event) {
         event.preventDefault()
         if(newRoomData.roomCapacity === '' || newRoomData.roomLocation === '' || newRoomData.roomName === '') {
-            alert("Fill all fields")
+            Swal.fire({
+                title: "Fill all fields!",
+                icon: "warning",
+                customClass: {
+                    popup: 'bg-sky-500',
+                    title: 'text-zinc-50',
+                    confirmButton: '!bg-zinc-50 !text-sky-500 hover:!bg-sky-500 hover:!text-zinc-50 focus:!ring-0 !transition-all !ease-in !duration-75',
+                }
+            })
             return
         }
 
         if(!(/^\d+$/.test(newRoomData.roomCapacity))) {
-            alert("Capacity must be a number")
+            Swal.fire({
+                title: "Amount must be a number.",
+                icon: "warning",
+                customClass: {
+                    popup: 'bg-sky-500',
+                    title: 'text-zinc-50',
+                    confirmButton: '!bg-zinc-50 !text-sky-500 hover:!bg-sky-500 hover:!text-zinc-50 focus:!ring-0 !transition-all !ease-in !duration-75',
+                }
+            })
             return
         }
 
@@ -30,11 +47,28 @@ export default function NewRoomForm(props) {
             })
 
             if(!response.ok) {
-                alert("Something went wrong")
+                Swal.fire({
+                    title: "Something went wrong.",
+                    icon: "error",
+                    customClass: {
+                        popup: 'bg-sky-500',
+                        title: 'text-zinc-50',
+                        confirmButton: '!bg-zinc-50 !text-sky-500 hover:!bg-sky-500 hover:!text-zinc-50 focus:!ring-0 !transition-all !ease-in !duration-75',
+                    }
+                })
                 return
             }
 
-            alert("Room successfully created!")
+            Swal.fire({
+                title: "Room successfully created!",
+                icon: "success",
+                iconColor: "#fafafa",
+                customClass: {
+                    popup: 'bg-sky-500',
+                    title: 'text-zinc-50',
+                    confirmButton: '!bg-zinc-50 !text-sky-500 hover:!bg-sky-500 hover:!text-zinc-50 focus:!ring-0 !transition-all !ease-in !duration-75',
+                }
+            })
             let data = await response.json()
             let newRoom = {
                 id: data.split("/")[4],
@@ -56,7 +90,15 @@ export default function NewRoomForm(props) {
             })
         }
         catch (error) {
-            alert(error)
+            Swal.fire({
+                title: error,
+                icon: "error",
+                customClass: {
+                    popup: 'bg-sky-500',
+                    title: 'text-zinc-50',
+                    confirmButton: '!bg-zinc-50 !text-sky-500 hover:!bg-sky-500 hover:!text-zinc-50 focus:!ring-0 !transition-all !ease-in !duration-75',
+                }
+            })
         }
     }
 

@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react"
 import Request from "./Request"
 
+import Swal from "sweetalert2"
+
 export default function RequestContainer(props) {
     const [requestData, setRequestData] = useState([])
     const [isLoading, setIsLoading] = useState(true)
@@ -27,7 +29,15 @@ export default function RequestContainer(props) {
             }})
         }
         catch (error) {
-            alert(error)
+            Swal.fire({
+                title: error,
+                icon: "error",
+                customClass: {
+                    popup: 'bg-sky-500',
+                    title: 'text-zinc-50',
+                    confirmButton: '!bg-zinc-50 !text-sky-500 hover:!bg-sky-500 hover:!text-zinc-50 focus:!ring-0 !transition-all !ease-in !duration-75',
+                }
+            })
             setIsLoading(false)
         }
     }, [])
